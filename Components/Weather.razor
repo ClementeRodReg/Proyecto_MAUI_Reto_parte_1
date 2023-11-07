@@ -1,0 +1,93 @@
+﻿@page "/weather"
+@using System.Globalization;
+@using Proyecto_MAUI_Reto_parte_1.Models;
+@using System.Net.Http.Json;
+
+<div class="input-group mb-5 mt-5">
+    <input class="form-control" type="text" placeholder="City Name" @bind=city />
+    <div>
+        <button class="btn btn-outline-secondary" @onclick=GetWeather type="button">Search</button>
+    </div>
+</div>
+
+@if (weatherData != null)
+{
+    <div class="text-center">
+        @if (cityData != null && cityData.results.Length > 0)
+        {
+            @foreach (Result city in cityData.results)
+            {
+                <button @onclick="()=>NewGetWeather(city.lat, city.lon)" class="btn btn-outline-secondary" type="button">@city.formatted</button>
+            }
+        }
+    </div>
+    <div class="text-center">
+        <p class="display-5">@city</p>
+        <p class="display-1">@weatherData.current.temperature_2m ºC</p>
+        <p class="display-6">@WeatherCode.Convert(@weatherData.daily.weathercode[0])</p>
+        <p class="display-7"> Precipitation: @weatherData.current.precipitation mm</p>
+        <p class="display-7"> Rain: @weatherData.current.rain mm</p>
+    </div>
+
+    <div class="card-group">
+
+        @for (int i = 0; i < weatherData.daily.time.Length; i++)
+        {
+            <Proyecto_MAUI_Reto_parte_1.Components.WeatherCard Day="@weatherData.daily.time[i]"
+                                                               TemperatureMax="@weatherData.daily.temperature_2m_max[i]"
+                                                               TemperatureMin="@weatherData.daily.temperature_2m_min[i]"
+                                                               TextTime="@WeatherCode.Convert(@weatherData.daily.weathercode[i])"
+                                                               UV="@weatherData.daily.uv_index_max[i]">
+
+            </Proyecto_MAUI_Reto_parte_1.Components.WeatherCard>
+        }
+    </div>
+}
+
+
+@code {
+    List<String>? countryList = new List<String> { };
+
+    string city = "";
+    float lat;
+    float lon;
+    CityData cityData;
+    WeatherModel? weatherData; // ?puede encontrase la ciudd o no
+    HttpClient Client = new HttpClient();
+
+
+    async Task GetWeather()
+    {
+        cityData = await GetCityData(); //Conseguimos la lat y la lon de la ciudad
+
+        lat = cityData.results[0].lat; //Tiene coma decimal
+        lon = cityData.results[0].lon; //Tiene coma decimal
+        countryList = new List<String> { };
+
+        for (int i = 0; i < cityData.results.Length; i++)
+        {
+            countryList.Add(cityData.results[i].formatted);
+        }
+
+        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+        weatherData = await Client.GetFromJsonAsync<WeatherModel>(EndPoint.GetWeatherEndPoint(lat, lon));
+
+        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("es-es");
+
+
+    }
+
+    async Task NewGetWeather(float lat, float lon)
+    {
+        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+        weatherData = await Client.GetFromJsonAsync<WeatherModel>(EndPoint.GetWeatherEndPoint(lat, lon));
+        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("es-es");
+    }
+
+
+    async Task<CityData> GetCityData()
+    {
+        var cityData2 = await Client.GetFromJsonAsync<CityData>(EndPoint.GetGeoApifyEndPoint(city));
+        return cityData2;
+    }
+}
