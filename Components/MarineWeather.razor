@@ -1,7 +1,7 @@
 ﻿@using System.Globalization;
 @using Proyecto_MAUI_Reto_parte_1.Models;
 @using System.Net.Http.Json;
-@inject HttpClient Client;
+
 <div class="input-group mb-3 mt-3">
     <input class="form-control" type="text" @bind=city placeholder="City Name" />
     <div>
@@ -66,6 +66,8 @@ else
     MarineWeatherModel? marineWeatherData;
     List<String>? ListaPaises;
     CityData cityData;
+    HttpClient Client = new HttpClient();
+
     async Task GetMarineWeather()
     {
         cityData = await GetCityData();//aqui conseguimos la latitud y longitud de la ciudad
