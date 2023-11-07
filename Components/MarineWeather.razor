@@ -1,0 +1,111 @@
+﻿@using System.Globalization;
+@using Proyecto_MAUI_Reto_parte_1.Models;
+@using System.Net.Http.Json;
+@inject HttpClient Client;
+<div class="input-group mb-3 mt-3">
+    <input class="form-control" type="text" @bind=city placeholder="City Name" />
+    <div>
+        <button class="btn btn-outline-secondary" @onclick=GetMarineWeather type="button">Search</button>
+    </div>
+</div>
+
+
+@if (!error)
+{
+    @if (marineWeatherData != null)
+    {
+        <div class="text-center">
+            <p class="display-2">@city</p>
+        </div>
+
+        @if (cityData != null && cityData.results.Length > 0)
+        {
+            @foreach (Result city in cityData.results)
+            {
+                <button @onclick="()=>NewGetMarineWeather(city.lat, city.lon)" class="btn btn-outline-primary" type="button">@city.formatted</button>
+            }
+
+        }
+
+        <div class="card-group" style="display:flex;align-items: center;justify-content: center">
+            @for (int i = 0; i < marineWeatherData.daily.time.Length; i++)
+            {
+                <MarineWeatherCard Time="@marineWeatherData.daily.time[i]"
+                                   WaveHeightMax="@marineWeatherData.daily.wave_height_max[i]"
+                                   WaveDirection="@marineWeatherData.daily.wave_direction_dominant[i]"
+                                   WavePeriodMax="@marineWeatherData.daily.wave_period_max[i]"></MarineWeatherCard>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center">
+            <p class="display-2">New York</p>
+            <p class="display-5">0m Above sea level</p>
+        </div>
+    }
+
+}
+else
+{
+    <div class="text-center">
+        <p class="display-2">There's no sea near this city</p>
+    </div>
+    if (error)
+    {
+        error = false;
+    }
+}
+
+@code {
+    string city = "";
+    string visible = "";
+    float lat;
+    float lon;
+    Boolean error = false;
+    MarineWeatherModel? marineWeatherData;
+    List<String>? ListaPaises;
+    CityData cityData;
+    async Task GetMarineWeather()
+    {
+        cityData = await GetCityData();//aqui conseguimos la latitud y longitud de la ciudad
+        lat = cityData.results[0].lat;
+        lon = cityData.results[0].lon;
+        ListaPaises = new List<string>();
+        for (int i = 0; i < cityData.results.Length; i++)
+        {
+            ListaPaises.Add(cityData.results[i].formatted);
+        }
+        try
+        {
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+            marineWeatherData = await Client.GetFromJsonAsync<MarineWeatherModel>(EndPoint.getMarineWeatherEndPoint(lat, lon));
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-ES");
+        }
+        catch (Exception ex)
+        {
+            error = true;
+        }
+    }
+
+    async Task<CityData> GetCityData()
+    {
+        var cityData2 = await Client.GetFromJsonAsync<CityData>(EndPoint.GetGeoApifyEndPoint(city));
+        return cityData2;
+    }
+
+    async Task NewGetMarineWeather(float lat, float lon)
+    {
+        try
+        {
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+            marineWeatherData = await Client.GetFromJsonAsync<MarineWeatherModel>(EndPoint.getMarineWeatherEndPoint(lat, lon));
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-ES");
+        }
+        catch (Exception ex)
+        {
+            error = true;
+        }
+    }
+
+}
