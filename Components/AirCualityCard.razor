@@ -1,5 +1,34 @@
-﻿<h3>AirCualityCard</h3>
+﻿<div class="card border-dark mb-3" style="max-width:50rem; background-color: #add8e6;">
+    <div class="text-center">
+        <div class="card-header">@time</div>
+        <div class="card-body">
+            <p class="card-text">@pm10 μg/m³</p>
+            <p class="card-text">@pm2_5 μg/m³</p>
+            <p class="card-text">@carbon_monoxide μg/m³</p>
+            <p class="card-text">@ozone μg/m³</p>
+            <p class="card-text">@european_aqi EAqi</p>
+        </div>
+    </div>
+</div>
 
 @code {
+
+    [Parameter]
+    public string time { get; set; }
+
+    [Parameter]
+    public float pm10 { get; set; }
+
+    [Parameter]
+    public float pm2_5 { get; set; }
+
+    [Parameter]
+    public float carbon_monoxide { get; set; }
+
+    [Parameter]
+    public float ozone { get; set; }
+
+    [Parameter]
+    public int european_aqi { get; set; }
 
 }
