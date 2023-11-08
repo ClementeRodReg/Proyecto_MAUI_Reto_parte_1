@@ -2,7 +2,7 @@
 @using Proyecto_MAUI_Reto_parte_1.Models;
 @using System.Net.Http.Json;
 
-<div class="input-group mb-3 mt-3">
+<div class="input-group mb-5 mt-5">
     <input class="form-control" type="text" @bind=city placeholder="City Name" />
     <div>
         <button class="btn btn-outline-secondary" @onclick=GetMarineWeather type="button">Search</button>
@@ -35,13 +35,6 @@
                                    WaveDirection="@marineWeatherData.daily.wave_direction_dominant[i]"
                                    WavePeriodMax="@marineWeatherData.daily.wave_period_max[i]"></MarineWeatherCard>
             }
-        </div>
-    }
-    else
-    {
-        <div class="text-center">
-            <p class="display-2">New York</p>
-            <p class="display-5">0m Above sea level</p>
         </div>
     }
 

@@ -33,8 +33,8 @@ namespace Proyecto_MAUI_Reto_parte_1
         //Conexión de la Api de AirQuality.
         public static string GetAirEndPoint(float lat, float lon)
         {
-            //var urld = $"https://air-quality-api.open-meteo.com/v1/air-quality?latitude=52.52&longitude=13.41&current=pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone&timezone=Europe%2FLondon;
-            var url = $"https://air-quality-api.open-meteo.com/v1/air-quality?latitude={lat}&longitude={lon}&current=pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone&timezone=Europe%2FLondon";
+            //var urld = $"https://air-quality-api.open-meteo.com/v1/air-quality?latitude={lat}&longitude={lon}&current=european_aqi&hourly=pm10,pm2_5,carbon_monoxide,ozone,european_aqi&timezone=Europe%2FLondon";
+            var url = $"https://air-quality-api.open-meteo.com/v1/air-quality?latitude={lat}&longitude={lon}&current=european_aqi&hourly=pm10,pm2_5,carbon_monoxide,ozone,european_aqi&timezone=Europe%2FLondon";
             return url;
         }
 
