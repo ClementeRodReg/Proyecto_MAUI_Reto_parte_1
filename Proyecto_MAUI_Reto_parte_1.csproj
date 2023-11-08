@@ -52,13 +52,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="..\..\..\a.jpg">
-        <Pack>True</Pack>
-        <PackagePath>\</PackagePath>
-      </None>
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     </ItemGroup>
 
