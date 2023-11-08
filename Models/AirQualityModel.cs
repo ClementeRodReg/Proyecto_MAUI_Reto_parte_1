@@ -15,10 +15,10 @@ namespace Proyecto_MAUI_Reto_parte_1.Models
         public string timezone { get; set; }
         public string timezone_abbreviation { get; set; }
         public float elevation { get; set; }
-        public Current_Units current_units { get; set; }
-        public Current current { get; set; }
-        public Hourly_Units hourly_units { get; set; }
-        public Hourly hourly { get; set; }
+        public Current_Units_AirQuality current_units { get; set; }
+        public Current_AirQuality current { get; set; }
+        public Hourly_Units_AirQuality hourly_units { get; set; }
+        public Hourly_AirQuality hourly { get; set; }
     }
 
     public class Current_Units_AirQuality

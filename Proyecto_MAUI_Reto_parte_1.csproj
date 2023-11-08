@@ -11,7 +11,9 @@
         <SingleProject>true</SingleProject>
         <ImplicitUsings>enable</ImplicitUsings>
         <EnableDefaultCssItems>false</EnableDefaultCssItems>
-
+		<!-- Ojo -->
+		<Nullable>enable</Nullable>
+		
         <!-- Display name -->
         <ApplicationTitle>Proyecto_MAUI_Reto_parte_1</ApplicationTitle>
 

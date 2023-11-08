@@ -1,12 +1,12 @@
 ﻿<div class="card border-dark mb-3" style="max-width:50rem; background-color: #add8e6;">
     <div class="text-center">
-        <div class="card-header">@time</div>
+        <div class="card-header">Hora: @time</div>
         <div class="card-body">
-            <p class="card-text">@pm10 μg/m³</p>
-            <p class="card-text">@pm2_5 μg/m³</p>
-            <p class="card-text">@carbon_monoxide μg/m³</p>
-            <p class="card-text">@ozone μg/m³</p>
-            <p class="card-text">@european_aqi EAqi</p>
+            <p class="card-text">pm10: @pm10 μg/m³</p>
+            <p class="card-text">pm2_5: @pm2_5 μg/m³</p>
+            <p class="card-text">carbon monoxide: @carbon_monoxide μg/m³</p>
+            <p class="card-text">ozone: @ozone μg/m³</p>
+            <p class="card-text">european air quality: @european_aqi EAqi</p>
         </div>
     </div>
 </div>
@@ -17,18 +17,18 @@
     public string time { get; set; }
 
     [Parameter]
-    public float pm10 { get; set; }
+    public float? pm10 { get; set; }
 
     [Parameter]
-    public float pm2_5 { get; set; }
+    public float? pm2_5 { get; set; }
 
     [Parameter]
-    public float carbon_monoxide { get; set; }
+    public float? carbon_monoxide { get; set; }
 
     [Parameter]
-    public float ozone { get; set; }
+    public float? ozone { get; set; }
 
     [Parameter]
-    public int european_aqi { get; set; }
+    public int? european_aqi { get; set; }
 
 }
