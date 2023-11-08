@@ -7,14 +7,14 @@
 <div class="input-group mb-5 mt-5">
     <input class="form-control" type="text" @bind=city placeholder="City Name" />
     <div>
-        <button class="btn btn-outline-secondary" @onclick=GetMarineWeather type="button">Search</button>
+        <button class="btn btn-outline-secondary" @onclick=GetAirQuality type="button">Search</button>
     </div>
 </div>
 
 
 @if (!error)
 {
-    @if (marineWeatherData != null)
+    @if (airQualityData != null)
     {
         <div class="text-center">
             <p class="display-2">@city</p>
@@ -24,20 +24,21 @@
         {
             @foreach (Result city in cityData.results)
             {
-                <button @onclick="()=>NewGetMarineWeather(city.lat, city.lon)" class="btn btn-outline-primary" type="button">@city.formatted</button>
+                <button @onclick="()=>NewGetAirQuality(city.lat, city.lon)" class="btn btn-outline-primary" type="button">@city.formatted</button>
             }
 
         }
-
-        <div class="card-group" style="display:flex;align-items: center;justify-content: center">
-            @for (int i = 0; i < marineWeatherData.daily.time.Length; i++)
-            {
-                <MarineWeatherCard Time="@marineWeatherData.daily.time[i]"
-                                   WaveHeightMax="@marineWeatherData.daily.wave_height_max[i]"
-                                   WaveDirection="@marineWeatherData.daily.wave_direction_dominant[i]"
-                                   WavePeriodMax="@marineWeatherData.daily.wave_period_max[i]"></MarineWeatherCard>
-            }
-        </div>
+        @for (int d = 0; d < 5; d++)
+        {
+            <div class="card-group" style="display:flex;align-items: center;justify-content: center">
+                @for (int i = 0; i < horas.Count; i++)
+                {
+                    <AirCualityCard Time="@airQualityData.hourly.time[horas[i]]"></AirCualityCard>
+                    horas[i] = horas[i] + 24;
+                }
+            </div>
+            <br />
+        }
     }
 
 }
@@ -57,13 +58,14 @@ else
     string visible = "";
     float lat;
     float lon;
+    List<int> horas = new List<int> { 6, 9, 12, 15, 18, 21 };
     Boolean error = false;
-    MarineWeatherModel? marineWeatherData;
+    AirQualityModel? airQualityData;
     List<String>? ListaPaises;
     CityData cityData;
     HttpClient Client = new HttpClient();
 
-    async Task GetMarineWeather()
+    async Task GetAirQuality()
     {
         cityData = await GetCityData();//aqui conseguimos la latitud y longitud de la ciudad
         lat = cityData.results[0].lat;
@@ -76,7 +78,7 @@ else
         try
         {
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
-            marineWeatherData = await Client.GetFromJsonAsync<MarineWeatherModel>(EndPoint.getMarineWeatherEndPoint(lat, lon));
+            airQualityData = await Client.GetFromJsonAsync<AirQualityModel>(EndPoint.GetAirEndPoint(lat, lon));
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-ES");
         }
         catch (Exception ex)
@@ -91,12 +93,12 @@ else
         return cityData2;
     }
 
-    async Task NewGetMarineWeather(float lat, float lon)
+    async Task NewGetAirQuality(float lat, float lon)
     {
         try
         {
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
-            marineWeatherData = await Client.GetFromJsonAsync<MarineWeatherModel>(EndPoint.getMarineWeatherEndPoint(lat, lon));
+            airQualityData = await Client.GetFromJsonAsync<AirQualityModel>(EndPoint.GetAirEndPoint(lat, lon));
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-ES");
         }
         catch (Exception ex)
