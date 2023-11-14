@@ -83,6 +83,7 @@
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
             airQualityData = await Client.GetFromJsonAsync<AirQualityModel>(EndPoint.GetAirEndPoint(lat, lon));
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-ES");
+            error = false;
         }
         catch (Exception ex)
         {
