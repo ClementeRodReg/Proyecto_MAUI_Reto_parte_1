@@ -10,7 +10,7 @@
 </div>
 
 
-@if (!error)
+@if (error==false)
 {
     @if (marineWeatherData != null)
     {
@@ -44,10 +44,6 @@ else
     <div class="text-center">
         <p class="display-2">There's no sea near this city</p>
     </div>
-    if (error)
-    {
-        error = false;
-    }
 }
 
 @code {
@@ -58,34 +54,52 @@ else
     Boolean error = false;
     MarineWeatherModel? marineWeatherData;
     List<String>? ListaPaises;
-    CityData cityData;
+    CityData? cityData;
     HttpClient Client = new HttpClient();
+
+    protected override void OnInitialized()
+    {
+        //error = false;
+    }
 
     async Task GetMarineWeather()
     {
         cityData = await GetCityData();//aqui conseguimos la latitud y longitud de la ciudad
-        lat = cityData.results[0].lat;
-        lon = cityData.results[0].lon;
-        ListaPaises = new List<string>();
-        for (int i = 0; i < cityData.results.Length; i++)
+
+
+        @if (error==false)
         {
-            ListaPaises.Add(cityData.results[i].formatted);
-        }
-        try
-        {
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
-            marineWeatherData = await Client.GetFromJsonAsync<MarineWeatherModel>(EndPoint.getMarineWeatherEndPoint(lat, lon));
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-ES");
-        }
-        catch (Exception ex)
-        {
-            error = true;
+            lat = cityData.results[0].lat;
+            lon = cityData.results[0].lon;
+            ListaPaises = new List<string>();
+
+            for (int i = 0; i < cityData.results.Length; i++)
+            {
+                ListaPaises.Add(cityData.results[i].formatted);
+            }
+            try
+            {
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+                marineWeatherData = await Client.GetFromJsonAsync<MarineWeatherModel>(EndPoint.getMarineWeatherEndPoint(lat, lon));
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-ES");
+                error = false;
+            }
+            catch (Exception ex)
+            {
+                error = true;
+            }
         }
     }
 
     async Task<CityData> GetCityData()
     {
+        error = false;
         var cityData2 = await Client.GetFromJsonAsync<CityData>(EndPoint.GetGeoApifyEndPoint(city));
+        if (cityData2.query.parsed == null)
+        {
+            error = true;
+        }
+
         return cityData2;
     }
 

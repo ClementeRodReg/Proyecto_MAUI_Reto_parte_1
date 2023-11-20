@@ -25,18 +25,18 @@
             @foreach (Result city in cityData.results)
             {
                 <button @onclick="()=>NewGetAirQuality(city.lat, city.lon)" class="btn btn-outline-primary" type="button">@city.formatted</button>
-                
+
             }
 
         }
-        
+
         @for (int d = 0; d < 4; d++)
-        {   
+        {
             <h2>@DateTime.Now.AddDays(d).ToString("dd/MM/yyyy")</h2>
             <div class="card-group" style="display:flex;align-items: center;justify-content: center">
                 @for (int i = 0; i < horas.Count; i++)
                 {
-                    @if(horas[0] > 100)
+                    @if (horas[0] > 100)
                     {
                         horas = new List<int> { 6, 9, 12, 15, 18, 21 };
                     }
@@ -54,6 +54,10 @@
     }
 
 }
+else
+{
+    <h2>Esta ciudad no existe</h2>
+}
 
 
 @code {
@@ -70,16 +74,17 @@
 
     async Task GetAirQuality()
     {
-        cityData = await GetCityData();//aqui conseguimos la latitud y longitud de la ciudad
-        lat = cityData.results[0].lat;
-        lon = cityData.results[0].lon;
-        ListaPaises = new List<string>();
-        for (int i = 0; i < cityData.results.Length; i++)
-        {
-            ListaPaises.Add(cityData.results[i].formatted);
-        }
         try
         {
+            cityData = await GetCityData();//aqui conseguimos la latitud y longitud de la ciudad
+            lat = cityData.results[0].lat;
+            lon = cityData.results[0].lon;
+            ListaPaises = new List<string>();
+            for (int i = 0; i < cityData.results.Length; i++)
+            {
+                ListaPaises.Add(cityData.results[i].formatted);
+            }
+
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
             airQualityData = await Client.GetFromJsonAsync<AirQualityModel>(EndPoint.GetAirEndPoint(lat, lon));
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-ES");
