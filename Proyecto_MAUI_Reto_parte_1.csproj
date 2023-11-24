@@ -54,7 +54,14 @@
         <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
 
-    
+	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == Release">
+		<AndroidkeyStore>True</AndroidkeyStore>
+		<AndroidSigningkeyStore>..\key.keystore</AndroidSigningkeyStore>
+		<AndroidSigningStorePass>123456</AndroidSigningStorePass>
+		<AndroidSigningKeyAlias>MauitestAlias</AndroidSigningKeyAlias>
+		<AndroidSigningKeyPass>123456</AndroidSigningKeyPass>
+	</PropertyGroup>
+
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
